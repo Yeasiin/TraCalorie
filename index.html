@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TraCalorie | Meal & Calorie Tracker</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <style>
+      strong {
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NavBar -->
+    <nav>
+      <div class="nav-wrapper blue">
+        <div class="container">
+          <a href="#" class="brand-logo center">TraCalorie</a>
+          <ul class="right">
+            <li>
+              <a href="#" class="clear-btn btn blue lighten-3">Clear All</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <br />
+    <div class="container">
+      <!-- Form Card -->
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title"> Add Meal / Food Item </span>
+          <form class="col">
+            <div class="row">
+              <div class="input-field col s6">
+                <input type="text" id="item-name" />
+                <label for="item-name">Add Meal</label>
+              </div>
+              <div class="input-field col s6">
+                <input type="number" id="item-calories" />
+                <label for="item-calories">Add Calories</label>
+              </div>
+              <button class="add-btn btn waves-effect blue darken-3">
+                <i class="fa fa-plus"></i> Add Meal
+              </button>
+              <!-- <button class="update-btn btn waves-effect orange">
+                <i class="far fa-edit"></i> Update Meal
+              </button>
+              <button class="delete-btn btn waves-effect red">
+                <i class="fas fa-times"></i> Delate Meal
+              </button> -->
+              <button class="back-btn btn waves-effect grey right">
+                <i class="fa fa-chevron-circle-left"></i> Back
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Calorie Count -->
+      <h3 class="center-align">
+        Total Calories: <span class="total-calories">0</span>
+      </h3>
+      <ul id="item-list" class="collection">
+        <!-- <li class="collection-item" id="item-0">
+          <strong>Stack dinner</strong>
+          <em>1200 Calories</em>
+          <a href="#" class="secondary-content">
+            <i class="edit-item fas fa-pencil-alt"></i>
+          </a>
+        </li> -->
+        <!-- <li class="collection-item" id="item-0">
+          <strong>Eggs</strong>
+          <em>300 Calories</em>
+          <a href="#" class="secondary-content">
+            <i class="edit-item fas fa-pencil-alt"></i>
+          </a>
+        </li>
+        <li class="collection-item" id="item-0">
+          <strong>Cookies</strong>
+          <em>400 Calories</em>
+          <a href="#" class="secondary-content">
+            <i class="edit-item fas fa-pencil-alt"></i>
+          </a>
+        </li> -->
+      </ul>
+    </div>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
