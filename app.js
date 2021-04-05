@@ -22,6 +22,28 @@ const StorageCtrl = (function () {
       }
       return items;
     },
+    updateStorageItem: function (updateItem) {
+      let items = JSON.parse(localStorage.getItem("items"));
+
+      items.forEach((item, index) => {
+        if (updateItem.id === item.id) {
+          items.splice(index, 1, updateItem);
+        }
+      });
+      localStorage.setItem("items", JSON.stringify(items));
+    },
+    deleteFromStorage: function (id) {
+      let items = JSON.parse(localStorage.getItem("items"));
+      items.forEach((item, index) => {
+        if (id === item.id) {
+          items.splice(index, 1);
+        }
+      });
+      localStorage.setItem("items", JSON.stringify(items));
+    },
+    clearAll: function () {
+      localStorage.removeItem("items");
+    },
   };
 })();
 
@@ -90,9 +112,7 @@ const itemCtrl = (function () {
     },
     updateItem: function (name, calorie) {
       calorie = parseInt(calorie);
-
       let found = null;
-
       data.items.forEach((item) => {
         if (item.id === data.currentItems.id) {
           item.name = name;
@@ -222,6 +242,7 @@ const UICtrl = (function () {
 const App = (function (itemCtrl, StorageCtrl, UICtrl) {
   const loadEventListener = function () {
     const UISelector = UICtrl.getSelector();
+    // Adding To UI
     document.querySelector(UISelector.addBtn).addEventListener("click", (e) => {
       const input = UICtrl.getInputValue();
       if (input.name !== "" && input.calorie !== "") {
@@ -234,6 +255,7 @@ const App = (function (itemCtrl, StorageCtrl, UICtrl) {
       }
       e.preventDefault();
     });
+    // Back button
     document
       .querySelector(UISelector.backBtn)
       .addEventListener("click", (e) => {
@@ -241,14 +263,17 @@ const App = (function (itemCtrl, StorageCtrl, UICtrl) {
         e.preventDefault();
       });
 
+    // Delete From Ui
     document
       .querySelector(UISelector.deleteBtn)
       .addEventListener("click", (e) => {
         const currentItems = itemCtrl.getCurrentItem();
         itemCtrl.deleteItem(currentItems.id);
         UICtrl.deleteListItem(currentItems.id);
+        StorageCtrl.deleteFromStorage(currentItems.id);
         e.preventDefault();
       });
+
     document
       .getElementById(UISelector.listItem)
       .addEventListener("click", (e) => {
@@ -262,16 +287,18 @@ const App = (function (itemCtrl, StorageCtrl, UICtrl) {
         }
         e.preventDefault();
       });
+    // Update Form UI
     document
       .querySelector(UISelector.updateBtn)
       .addEventListener("click", (e) => {
         const input = UICtrl.getInputValue();
         const updateItem = itemCtrl.updateItem(input.name, input.calorie);
         UICtrl.updateItem(updateItem);
-        console.log(input);
+
+        StorageCtrl.updateStorageItem(updateItem);
+
         e.preventDefault();
       });
-
     // disabling Enter Key
     document.addEventListener("keypress", (e) => {
       if (e.key === "Enter" || e.code === "Enter") {
@@ -279,16 +306,18 @@ const App = (function (itemCtrl, StorageCtrl, UICtrl) {
         console.log("you Can't Do This");
       }
     });
+    // Clear All Data
     document
       .querySelector(UISelector.clearBtn)
       .addEventListener("click", (e) => {
+        UICtrl.hideList();
         itemCtrl.removeItem();
         let listItems = document.querySelectorAll(UISelector.itemList);
         listItems = Array.from(listItems);
         listItems.forEach((item) => {
           item.remove();
         });
-        UICtrl.hideList();
+        StorageCtrl.clearAll();
       });
   };
 
