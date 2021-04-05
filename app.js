@@ -1,3 +1,30 @@
+const StorageCtrl = (function () {
+  // public Function
+  return {
+    storeItem: function (data) {
+      let items;
+      if (localStorage.getItem("items") === null) {
+        items = [];
+        items.push(data);
+        localStorage.setItem("items", JSON.stringify(items));
+      } else {
+        items = JSON.parse(localStorage.getItem("items"));
+        items.push(data);
+        localStorage.setItem("items", JSON.stringify(items));
+      }
+    },
+    getStorageItem: function () {
+      let items;
+      if (localStorage.getItem("items") === null) {
+        items = [];
+      } else {
+        items = JSON.parse(localStorage.getItem("items"));
+      }
+      return items;
+    },
+  };
+})();
+
 const itemCtrl = (function () {
   const item = function (id, name, calories) {
     this.id = id;
@@ -6,11 +33,7 @@ const itemCtrl = (function () {
   };
 
   const data = {
-    items: [
-      //   { id: 0, name: "Stack Dinner", calories: 1200 },
-      //   { id: 1, name: "Cookies", calories: 400 },
-      //   { id: 2, name: "Eggs", calories: 300 },
-    ],
+    items: StorageCtrl.getStorageItem(),
     currentItems: null,
     totalCalories: 0,
   };
@@ -196,7 +219,7 @@ const UICtrl = (function () {
   };
 })();
 
-const App = (function (itemCtrl, UICtrl) {
+const App = (function (itemCtrl, StorageCtrl, UICtrl) {
   const loadEventListener = function () {
     const UISelector = UICtrl.getSelector();
     document.querySelector(UISelector.addBtn).addEventListener("click", (e) => {
@@ -207,6 +230,7 @@ const App = (function (itemCtrl, UICtrl) {
         const totalCalories = itemCtrl.getTotalCalories();
         UICtrl.showTotalCalories(totalCalories);
         UICtrl.clearInput();
+        StorageCtrl.storeItem(newItem);
       }
       e.preventDefault();
     });
@@ -282,6 +306,6 @@ const App = (function (itemCtrl, UICtrl) {
       loadEventListener();
     },
   };
-})(itemCtrl, UICtrl);
+})(itemCtrl, StorageCtrl, UICtrl);
 
 App.init();
