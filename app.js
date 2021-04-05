@@ -30,12 +30,14 @@ const itemCtrl = (function () {
       } else {
         ID = 0;
       }
-
       calorie = parseInt(calorie);
       newItem = new item(ID, name, calorie);
       data.items.push(newItem);
 
       return newItem;
+    },
+    removeItem: function () {
+      data.items = [];
     },
     getItemById: function (id) {
       let found = null;
@@ -45,6 +47,17 @@ const itemCtrl = (function () {
         }
       });
       return found;
+    },
+    deleteItem: function (id) {
+      const ids = data.items.map((item) => {
+        return item.id;
+      });
+      const index = ids.indexOf(id);
+      data.items.splice(index, 1);
+      const totalCalories = itemCtrl.getTotalCalories();
+      UICtrl.showTotalCalories(totalCalories);
+      UICtrl.clearInput();
+      UICtrl.clearEditState();
     },
     setCurrentItem: function (item) {
       data.currentItems = item;
@@ -86,6 +99,7 @@ const UICtrl = (function () {
     deleteBtn: ".delete-btn",
     backBtn: ".back-btn",
     nameInput: "item-name",
+    clearBtn: ".clear-btn",
     calorieInput: "item-calories",
     total: ".total-calories",
   };
@@ -140,7 +154,6 @@ const UICtrl = (function () {
       UICtrl.showTotalCalories(totalCalories);
       UICtrl.clearInput();
       UICtrl.clearEditState();
-
     },
     clearInput: function () {
       document.getElementById(UISelector.nameInput).value = "";
@@ -152,6 +165,10 @@ const UICtrl = (function () {
       document.querySelector(UISelector.updateBtn).style.display = "none";
       document.querySelector(UISelector.backBtn).style.display = "none";
       document.querySelector(UISelector.addBtn).style.display = "block";
+    },
+    deleteListItem: function (id) {
+      const itemId = `item-${id}`;
+      document.getElementById(itemId).remove();
     },
     showEditState: function () {
       document.querySelector(UISelector.deleteBtn).style.display =
@@ -182,7 +199,6 @@ const UICtrl = (function () {
 const App = (function (itemCtrl, UICtrl) {
   const loadEventListener = function () {
     const UISelector = UICtrl.getSelector();
-
     document.querySelector(UISelector.addBtn).addEventListener("click", (e) => {
       const input = UICtrl.getInputValue();
       if (input.name !== "" && input.calorie !== "") {
@@ -201,6 +217,14 @@ const App = (function (itemCtrl, UICtrl) {
         e.preventDefault();
       });
 
+    document
+      .querySelector(UISelector.deleteBtn)
+      .addEventListener("click", (e) => {
+        const currentItems = itemCtrl.getCurrentItem();
+        itemCtrl.deleteItem(currentItems.id);
+        UICtrl.deleteListItem(currentItems.id);
+        e.preventDefault();
+      });
     document
       .getElementById(UISelector.listItem)
       .addEventListener("click", (e) => {
@@ -226,14 +250,22 @@ const App = (function (itemCtrl, UICtrl) {
 
     // disabling Enter Key
     document.addEventListener("keypress", (e) => {
-      // if(e.keyCode === 13 || e.which === 13){
-
-      // }
       if (e.key === "Enter" || e.code === "Enter") {
         e.preventDefault();
         console.log("you Can't Do This");
       }
     });
+    document
+      .querySelector(UISelector.clearBtn)
+      .addEventListener("click", (e) => {
+        itemCtrl.removeItem();
+        let listItems = document.querySelectorAll(UISelector.itemList);
+        listItems = Array.from(listItems);
+        listItems.forEach((item) => {
+          item.remove();
+        });
+        UICtrl.hideList();
+      });
   };
 
   return {
